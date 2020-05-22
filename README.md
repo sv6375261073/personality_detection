@@ -1,0 +1,2 @@
+# personality_detection
+To know the behaviour , Characters  of a person based on text relevant to him , like taking text from his Linkedin profile, facebook, twitter. it will take text enough of a person and will check some limitation that text(checking text that actually text includes required features or garbage text ) if text is proper it will return set of attributes of a person in percentage .
