@@ -57,9 +57,15 @@ class DataPrep():
         ]
         self.tfidf = TfidfVectorizer(stop_words='english', strip_accents='ascii')
     def transform(self,X):
+        """
+        Takes raw_text( ['hi i am ok '] ) and converts raw_texts into vector and return vectors  
+        """
         X = self.tfidf.fit_transform(X)
         return X
     def prep_data(self, type, trait, regression=False, model_comparison=False):
+        """
+        Conversion of text to vector of document type of text 
+        """
         df_status = self.prep_status_data()
         # df_essay = self.prep_essay_data()
 
@@ -115,12 +121,18 @@ class DataPrep():
 
 
     def prep_status_data(self):
+        """"
+        Label conversion into boolian type 0/1 of personality data
+        """
         df = pd.read_csv('datasets/preprocessed_dataset/mypersonality_final.csv', encoding="ISO-8859-1")
         df = self.convert_traits_to_boolean(df)
         return df
 
-
+     #preprocessing essay and mairesse datasets 
     def prep_essay_data(self):
+        """"
+        Reading Essay.csv and mairesse.csv , concating them and converting their labels into boolian form , returns a single dataset df
+        """
         df_essays = pd.read_csv('datasets/preprocessed_dataset/essays.csv', encoding="ISO-8859-1")
         df_mairesse = pd.read_csv('datasets/preprocessed_dataset/mairesse.csv', encoding="ISO-8859-1", header=None)
 
@@ -135,8 +147,11 @@ class DataPrep():
         df = self.convert_traits_to_boolean(df)
 
         return df
-
+    # mapping traits in yes/No form 
     def convert_traits_to_boolean(self, df):
+        """
+        Boolian conversion of labels of each 5 traits , returns a converted dataset of label into boolian form 
+        """
         trait_columns = ['cOPN', 'cCON', 'cEXT', 'cAGR', 'cNEU']
         d = {'y': True, 'n': False}
 
@@ -145,6 +160,9 @@ class DataPrep():
 
         return df
 
-
+    # loading dataset 
     def load_data(self, filepath):
+        """
+        Takes path of the csv file and read that , returns dataset object 
+        """
         return pd.read_csv(filepath, encoding="ISO-8859-1")

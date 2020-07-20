@@ -1,5 +1,6 @@
 # process_data.py
 
+# importing required packages 
 import numpy as np
 import theano
 import pickle
@@ -13,32 +14,33 @@ import os
 def build_data_cv(datafile, cv=10, clean_string=True):  
     """
     Loads data and split into 10 folds.
+    Takes filepath and no. of folds and returns vocabulary and convert labels into boolian form (y:1,else 0)
     """
     revs = []
     vocab = defaultdict(float)
 
     with open(datafile, "r",encoding='latin1') as csvf:
-        csvreader=csv.reader(csvf,delimiter=',',quotechar='"')
+        csvreader=csv.reader(csvf,delimiter=',',quotechar='"')  # reading file with csvreader 
         first_line=True
-        for line in csvreader:
+        for line in csvreader:  # skipping header line 
             if first_line:
                 first_line=False
                 continue
             status=[]
-            sentences=re.split(r'[.?]', line[1].strip())
+            sentences=re.split(r'[.?]', line[1].strip()) # if texts 
             try:
                 sentences.remove('')
             except ValueError:
                 None
 
             for sent in sentences:
-                if clean_string:
+                if clean_string:   # checking text is cleaned already 
                     orig_rev = clean_str(sent.strip())
                     if orig_rev=='':
-                            continue
-                    words = set(orig_rev.split())
+                            continue # if no text , skip it 
+                    words = set(orig_rev.split())  # getting words from text 
                     splitted = orig_rev.split()
-                    if len(splitted)>150:
+                    if len(splitted)>150: # chcking if a sentence has more than 150 words to crate folds 
                         orig_rev=[]
                         splits=int(np.floor(len(splitted)/20))
                         for index in range(splits):
@@ -159,7 +161,7 @@ def get_mairesse_features(file_name):
 
 if __name__=="__main__":
     global w2v_file
-    os.chdir('/content/drive/My Drive/personality-detection-master/')
+    os.chdir('datasets/preprocessed_dataset/')
     data_folder = 'essays.csv'
     mairesse_file = 'mairesse.csv'
     print ("loading data...")
@@ -174,7 +176,7 @@ if __name__=="__main__":
     w2v = gensim.models.KeyedVectors.load_word2vec_format('https://s3.amazonaws.com/dl4j-distribution/GoogleNews-vectors-negative300.bin.gz', binary=True)
     print ("word2vec loaded!")
     print( "num words already in word2vec: " + str(len(w2v.vocab)))
-    add_unknown_words(w2v, vocab)
+    add_unknown_words(w2v, vocab)  # adding unknown words in word2vec 
     W, word_idx_map = get_W(w2v)
     rand_vecs = {}
     add_unknown_words(rand_vecs, vocab)

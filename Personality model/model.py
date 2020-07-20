@@ -1,11 +1,15 @@
+# importing packages 
 import pickle
 import gensim
-from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
-from data_prep import DataPrep
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier# importing Regresser and classifier for value and yes/no of a trait
+from data_prep import DataPrep  # importing DataPreparation from created module 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 class Model():
     def __init__(self):
+        """ 
+            Inititing objects here for model and  vectorizer 
+        """
         self.rfr = RandomForestRegressor(bootstrap=True,
          max_features='sqrt',
          min_samples_leaf=1,
@@ -15,6 +19,9 @@ class Model():
         self.tfidf = TfidfVectorizer(stop_words='english', strip_accents='ascii')
 
     def fit(self, X, y, regression=True):
+        """
+        Fitting regression and classification model based on given flag ,Takes X,Y and regression flag to fit regresser model or classifier 
+        """
         X = self.tfidf.fit_transform(X)
         if regression:
             self.rfr = self.rfr.fit(X, y)
@@ -22,6 +29,9 @@ class Model():
             self.rfc = self.rfc.fit(X, y)
 
     def predict(self, X, regression=True):
+        """
+         # Takes text and convert that into tfid Vectors to predict traits , Takes features and returns predictions 
+        """
         X = self.tfidf.transform(X)
         if regression:
             return self.rfr.predict(X)
@@ -29,6 +39,9 @@ class Model():
             return self.rfc.predict(X)
 
     def predict_proba(self, X, regression=False):
+        """
+        Predicting probablity of classified class on text ,Takes Feature and returns probablity 
+        """
         X = self.tfidf.transform(X)
         if regression:
             raise ValueError('Cannot predict probabilites of a regression!')
@@ -38,7 +51,9 @@ class Model():
 if __name__ == '__main__':
     traits = ['OPN', 'CON', 'EXT', 'AGR', 'NEU']
     model = Model()
-
+    """
+        Here each traits model are getting fit Regresser and clsassifier 
+    """
     for trait in traits:
         dp = DataPrep()
         X_regression, y_regression = dp.prep_data('status', trait, regression=True, model_comparison=False)

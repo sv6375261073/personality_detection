@@ -39,7 +39,7 @@ import re
 import spacy
 from gensim.utils import simple_preprocess
 from gensim import corpora
-custom_nlp=spacy.load('en_core_web_sm')
+custom_nlp=spacy.load('en_core_web_sm') # spacy nlp_pretrained model object 
 
 from nltk.cluster import KMeansClusterer
 import nltk
@@ -47,7 +47,7 @@ from sklearn import cluster
 from sklearn import metrics
 from sklearn.externals import joblib
 
-#Tag remover funtion
+# Removing tags from text like \n,',"
 def remove(txt,doc):
   try:
     doc=doc.replace(txt,' ')
@@ -55,7 +55,7 @@ def remove(txt,doc):
     txt="\\"+txt
     doc=doc.replace(txt,' ')
   return doc
-
+# removing custom stopwords(given list by user) from tex
 def remove_unwanted_extra(removeable_text_list,doc):
   try:
     for txt in removeable_text_list:
@@ -108,6 +108,10 @@ word_vectors=gensim.models.KeyedVectors.load_word2vec_format('https://s3.amazona
 df=pd.read_csv('/content/drive/My Drive/data.csv')
 sentences=[simple_preprocess(txt) for txt in df['text']]
 def transform(sentences,word2vec_model):
+        """ it takes 2d sequence of words to convert words into vectors
+        Ex: [['hi','there'],['ok','you','got','it']]
+
+        """
   Xtrain,special=[],[]
   for sentence in sentences:
     # vec=[]

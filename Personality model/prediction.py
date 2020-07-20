@@ -2,18 +2,25 @@ import pickle
 import os
 import pandas as pd
 from math import pi
-from model import Model
-from data_prep import DataPrep
+from model import Model # importing model initilizer from created mmodule 
+from data_prep import DataPrep # importing Data preparation of texts from created module
 
 # loading cat_5 models 
 class Predictor_cat5():
     def __init__(self):
+        """
+        Loading all regression and classification models of cat5 models (model no 1 )
+        """
         self.traits = ['OPN', 'CON', 'EXT', 'AGR', 'NEU']
         self.categories=['OPENNESS','CONSCIENTIOUSNESS','EXTRAVERSION','AGREEABLENESS','NEUROTICISM']
         self.Pre_cat = {trait:cat for (trait,cat) in zip(self.traits,self.categories)}
         self.models={trait:pickle.load(open('static/'+trait+'_model.pkl', 'rb')) for i,trait in enumerate(self.traits)}
         self.dp=DataPrep()
     def predict(self, X, traits='All', predictions='All'):
+        """
+            Takes features and returns predictions 
+             Transforming text into vector and predicting probablity on text 
+        """
         predictions = {}
         self.dp.transform(X)
         if traits == 'All':
@@ -30,9 +37,16 @@ class Predictor_cat5():
 # loading mbti models
 class mbti_models:
     def __init__(self):
+        """
+            Loading all models of 2nd type model of cat8
+            
+        """
         self.traits=['IE','NS','TF','JP']
         self.models={trait+'_model':pickle.load(open('static/rfc_'+trait+'_model.pkl','rb')) for trait in self.traits}
     def predict(self,text):
+        """
+        Predicting probablity of traits based on pipeline models 
+        """
         categories=[('Introversion','Extroversion'),('Intution','Sensing'),('Thinking','Feeling'),('judging','perceving')]
         self.prediction,self.probablity={},{}
         for i,trait in enumerate(self.traits):
