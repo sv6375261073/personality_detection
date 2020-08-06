@@ -27,7 +27,7 @@ from imblearn.pipeline import make_pipeline as make_pipeline_imb
 
 df_working=pd.read_csv('datasets/preprocessed_dataset/mbti_preprocessed.csv')
 
-# Create a binary column for each of the 4 axis types for analysis
+# Create a binary column for each of the 4 axis types for later analysis
 df_working['I-E'] = df_working['type'].map(lambda x: 'Introversion' if x[0] == 'I' else 'Extroversion')
 df_working['N-S'] = df_working['type'].map(lambda x: 'Intuition' if x[1] == 'N' else 'Sensing')
 df_working['T-F'] = df_working['type'].map(lambda x: 'Thinking' if x[2] == 'T' else 'Feeling')
@@ -49,10 +49,6 @@ stop_rev = stop
 
 # Cleaning text 
 def cleaner(text):
-    """
-        Takes Text and removes (special words ,punctuation , number values,urls and convert string into lower text  )
-        Returns cleaned text 
-    """
     stemmer = PorterStemmer()                                        # replaces post separators with empty space
     text = re.sub(r'\bhttps?:\/\/.*?[\d\r\n\|\{\}\(\)\'\"\\/]*? ', 'URL ', text, flags=re.MULTILINE)  # replace hyperlink with 'URL'
     text = text.translate(str.maketrans('', '', string.punctuation)) # removes punctuation
